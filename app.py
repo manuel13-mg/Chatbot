@@ -5,7 +5,7 @@ import time
 
 client = OpenAI(
     base_url="https://integrate.api.nvidia.com/v1",
-    api_key=st.secrets["NVAPI_KEY"]  # Store API key in Streamlit secrets
+    api_key=st.secrets["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"]  # Store API key in Streamlit secrets
 )
 
 
