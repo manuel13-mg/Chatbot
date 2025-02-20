@@ -1,11 +1,37 @@
 import streamlit as st
 import groq
 import time
+import base64
+
+# --- Load Favicon ---
+def load_favicon(filepath):
+    try:
+        with open(filepath, "rb") as f:
+            image_data = f.read()
+        base64_encoded = base64.b64encode(image_data).decode('utf-8')
+        return base64_encoded
+    except FileNotFoundError:
+        st.error(f"Favicon file not found: {filepath}")
+        return None
+
+def load_image(filepath):
+    try:
+        with open(filepath, "rb") as f:
+            image_data = f.read()
+        base64_encoded = base64.b64encode(image_data).decode('utf-8')
+        return base64_encoded
+    except FileNotFoundError:
+        st.error(f"Image file not found: {filepath}")
+        return None
+
+
+favicon_path = "Picsart_25-02-19_20-54-44-943-removebg-preview.png" # Replace with your icon file
+favicon_base64 = load_favicon(favicon_path)
 
 # --- Configuration ---
 st.set_page_config(
-    page_title="AI Chat Helper",
-    page_icon=":brain:",
+    page_title="CHAT MESH",  # Changed chatbot name here
+    page_icon=f"data:image/png;base64,{favicon_base64}" if favicon_base64 else ":brain:",  # Use base64 if available, otherwise default
     layout="wide",  # Use wide layout
 )
 
@@ -93,6 +119,18 @@ st.markdown(
         background-color: #61dafb;
         color: #282c34;
     }
+
+    /* Center the image */
+    .image-container {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 20px; /* Adjust as needed */
+    }
+
+    .chatbot-image {
+        width: 500px; /* Adjust as needed */
+        border-radius: 10px; /* Optional: for rounded corners */
+    }
     </style>
     """,
     unsafe_allow_html=True,
@@ -119,7 +157,7 @@ def logout():
 def sidebar():
     with st.sidebar:
         st.image("https://avatars.githubusercontent.com/u/105322807?s=200&v=4", width=80)  # Replace with your logo
-        st.title("MindMerge")
+        st.title("CHAT MESH")  # Changed chatbot name here
         st.markdown("[AI Chat Helper](#)")
         st.markdown("[Templates](https://streamlit.io) [PRO](https://streamlit.io)")  # Replace with your links
         st.markdown("[My Projects](https://streamlit.io) [PRO](https://streamlit.io)")
@@ -154,7 +192,7 @@ def generate_response(prompt, history):
         # Add a system message to set the bot's persona
         system_message = {
             "role": "system",
-            "content": "You are a helpful and friendly assistant. When greeted, respond with a warm welcome and offer assistance. If the user asks a question, provide a concise and informative answer.",
+            "content": "You are a helpful and friendly assistant. When greeted, respond with a warm welcome and offer assistance.",
         }
 
         messages = [system_message]  # Start with the system message
@@ -190,7 +228,7 @@ def generate_response(prompt, history):
 
 if not st.session_state.logged_in:
     # --- Login Page ---
-    st.title("Welcome to MindMerge")
+    st.title("Welcome to CHAT MESH")  # Changed chatbot name here
     st.write("Please log in to continue.")
     username = st.text_input("Username", value="mg13")  # Default username
     password = st.text_input("Password", type="password", value="manuel123")  # Default password
@@ -204,8 +242,24 @@ if not st.session_state.logged_in:
 else:
     # --- Chat Interface ---
     sidebar()  # Display the sidebar
+
+    # --- Top Image ---
+    image_path = "my_image.png"  # Replace with your image file name
+    image_base64 = load_image(image_path)
+    if image_base64:
+        st.markdown(
+            f"""
+            <div class="image-container">
+                <img class="chatbot-image" src="data:image/png;base64,{image_base64}" alt="Chatbot Image">
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+    else:
+        st.warning("Could not load image. Make sure the file exists and is accessible.")
+
     # No columns needed now that we're not using the right panel
-    st.title("AI Chat Helper")  # Title in the main area
+    ##st.title("CHAT MESH")  # Changed chatbot name here
 
     # --- Chat Messages ---
     for message in st.session_state.messages:
